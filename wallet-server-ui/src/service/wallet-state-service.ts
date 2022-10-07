@@ -3,6 +3,10 @@ import { MatDialog } from '@angular/material/dialog'
 import { BehaviorSubject, forkJoin, Observable, throwError, timer } from 'rxjs'
 import { catchError, debounceTime, delayWhen, retryWhen, switchMap, tap } from 'rxjs/operators'
 
+import * as WalletTS from 'wallet-ts/index'
+
+import { environment } from '~environments'
+
 import { AddressService } from '~service/address.service'
 import { AuthService } from '~service/auth.service'
 import { ContactService } from './contact-service'
@@ -18,6 +22,7 @@ import { getMessageBody } from '~util/wallet-server-util'
 
 import { ErrorDialogComponent } from '~app/dialog/error/error.component'
 import { ConfirmationDialogComponent } from '~app/dialog/confirmation/confirmation.component'
+
 
 
 export /* const */ enum WalletServiceState {
@@ -59,6 +64,23 @@ const THREE_DASHES_WORTH = /([.\w]+-[.\w]+-[.\w]+)/ // matches "1.9.3-11-8788b6f
  */
 @Injectable({ providedIn: 'root' })
 export class WalletStateService {
+
+  /** WalletTS data pass through */
+  get WalletTS() { return WalletTS } // Common library exposure point
+  private _walletState: WalletTS.WalletServerStateModel
+  get walletState() { return this._walletState }
+
+  initialize() {
+    console.debug('initialize()')
+    // Communicate with WalletTS via proxy server
+    WalletTS.ConfigureServerURL(environment.walletServerApi)
+    const token = this.authService.getToken()
+    if (token) {
+      WalletTS.ConfigureAuthorizationHeader('Bearer ' + token)
+    }
+
+    return WalletTS.WaitForServerAndInitializeAll() 
+  }
 
   // Server
 

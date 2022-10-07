@@ -57,6 +57,9 @@ export class AppComponent implements OnInit, OnDestroy {
   
   private onLogin() {
     this.createSubscriptions()
+    this.walletStateService.initialize().subscribe(r => {
+      console.warn(' walletStateService.initialize()', r)
+    })
     this.appServerReady$ = this.walletStateService.waitForAppServer().subscribe(r => {
       console.debug(' waitForAppServer()', r)
       // We have blockchain info locally

@@ -71,7 +71,7 @@ export async function basicTests() {
   const TEST_LABEL_2 = 'test label'
 
   // Should it be possible to create a new address without a label?
-  await WalletServer.GetNewAddress(TEST_LABEL).then(async (r) => {
+  await WalletServer.API.GetNewAddress(TEST_LABEL).then(async (r) => {
     console.debug('GetNewAddress()', r)
 
     const address = <string>r.result
@@ -122,7 +122,7 @@ export async function basicTests() {
   //   console.debug('LockUnspent()', result)
   // })
 
-  await WalletServer.GetDLCs().then(r => {
+  await WalletServer.API.GetDLCs().then(r => {
     console.debug('GetDLCs()', r)
   })
 
@@ -140,17 +140,17 @@ export async function basicTests() {
     assert.ifError(r.error)
   })
 
-  await WalletServer.GetAddresses().then(r => {
+  await WalletServer.API.GetAddresses().then(r => {
     console.debug('GetAddresses()', r)
     assert.ifError(r.error)
   })
 
-  await WalletServer.GetSpentAddresses().then(r => {
+  await WalletServer.API.GetSpentAddresses().then(r => {
     console.debug('GetSpentAddresses()', r)
     assert.ifError(r.error)
   })
 
-  await WalletServer.GetFundedAddresses().then(r => {
+  await WalletServer.API.GetFundedAddresses().then(r => {
     console.debug('GetFundedAddresses()', r)
     assert.ifError(r.error)
     assert(r.result)
@@ -160,7 +160,7 @@ export async function basicTests() {
     }
   })
 
-  await WalletServer.GetUnusedAddresses().then(r => {
+  await WalletServer.API.GetUnusedAddresses().then(r => {
     console.debug('GetUnusedAddresses()', r)
     assert.ifError(r.error)
   })
